@@ -1,0 +1,65 @@
+﻿<UserControl
+    x:Class="Templates.CustomMessageBox.Views.CRUDButtons"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:local="clr-namespace:Templates.CustomMessageBox.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+    <DockPanel Grid.Row="0">
+        <Button
+            Margin="0"
+            Padding="5,0"
+            BorderThickness="0"
+            Command="{Binding AddContest}"
+            Foreground="SkyBlue"
+            Style="{StaticResource MaterialDesignFlatButton}">
+            <Button.Content>
+                <materialDesign:PackIcon
+                    Width="20"
+                    Height="20"
+                    Kind="AddCircle" />
+            </Button.Content>
+        </Button>
+        <Button
+            Margin="0"
+            Padding="5,0"
+            Command="{Binding EditContest}"
+            Foreground="SkyBlue"
+            Style="{StaticResource MaterialDesignFlatButton}">
+            <Button.Content>
+                <materialDesign:PackIcon
+                    Width="20"
+                    Height="20"
+                    Kind="Edit" />
+            </Button.Content>
+        </Button>
+        <Button
+            Margin="0"
+            Padding="5,0"
+            Command="{Binding Refresh}"
+            Foreground="SkyBlue"
+            Style="{StaticResource MaterialDesignFlatButton}">
+            <Button.Content>
+                <materialDesign:PackIcon
+                    Width="20"
+                    Height="20"
+                    Kind="Refresh" />
+            </Button.Content>
+        </Button>
+        <Button
+            Margin="0"
+            Padding="5,0"
+            Command="{Binding DeleteContest}"
+            Foreground="OrangeRed"
+            Style="{StaticResource MaterialDesignFlatButton}">
+            <Button.Content>
+                <materialDesign:PackIcon
+                    Width="20"
+                    Height="20"
+                    Kind="Delete" />
+            </Button.Content>
+        </Button>
+    </DockPanel>
+</UserControl>

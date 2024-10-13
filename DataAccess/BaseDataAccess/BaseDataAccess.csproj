@@ -1,0 +1,29 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <TargetFramework>netstandard2.1</TargetFramework>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Folder Include="CandidateRepository\Interface\" />
+    <Folder Include="CandidateRepository\Repository\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Dapper" Version="2.1.35" />
+    <PackageReference Include="Npgsql.Json.NET" Version="8.0.3" />
+    <PackageReference Include="Serilog" Version="4.0.1" />
+    <PackageReference Include="Serilog.Sinks.Console" Version="6.0.0" />
+    <PackageReference Include="Serilog.Sinks.Debug" Version="3.0.0" />
+    <PackageReference Include="Serilog.Sinks.File" Version="6.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\BaseMVVM\Base\Base.csproj" />
+    <ProjectReference Include="..\..\Models\DTOs\DTOs.csproj" />
+    <ProjectReference Include="..\..\Models\ObjectLoader\ObjectLoader.csproj" />
+    <ProjectReference Include="..\..\Tools\Helpers\Helpers.csproj" />
+  </ItemGroup>
+
+</Project>
