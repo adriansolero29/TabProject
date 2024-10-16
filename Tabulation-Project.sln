@@ -23,13 +23,11 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "ObjectLoader", "Models\Obje
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DTOs", "Models\DTOs\DTOs.csproj", "{3E91257A-55BC-4403-825E-A07B72068C44}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tabulation.Console", "Tabulation.Console\Tabulation.Console.csproj", "{ABC1DB17-D5B3-4450-A3E7-FA320AE812FB}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Tabulation.UI.AdminManagement", "Tabulation.UI.AdminManagement\Tabulation.UI.AdminManagement.csproj", "{673D9E50-542F-48C8-AF4F-A20CFE07F61E}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "RepositoryServices", "DataAccess\RepositoryServices\RepositoryServices.csproj", "{D22EEFFA-1B0E-4C20-BF2E-6A4658EC0B28}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Templates", "Templates\Templates.csproj", "{BA2928D7-2A8D-49B2-8E75-7611472FBD30}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Templates", "Templates\Templates.csproj", "{BA2928D7-2A8D-49B2-8E75-7611472FBD30}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -61,10 +59,6 @@ Global
 		{3E91257A-55BC-4403-825E-A07B72068C44}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3E91257A-55BC-4403-825E-A07B72068C44}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3E91257A-55BC-4403-825E-A07B72068C44}.Release|Any CPU.Build.0 = Release|Any CPU
-		{ABC1DB17-D5B3-4450-A3E7-FA320AE812FB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{ABC1DB17-D5B3-4450-A3E7-FA320AE812FB}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{ABC1DB17-D5B3-4450-A3E7-FA320AE812FB}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{ABC1DB17-D5B3-4450-A3E7-FA320AE812FB}.Release|Any CPU.Build.0 = Release|Any CPU
 		{673D9E50-542F-48C8-AF4F-A20CFE07F61E}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{673D9E50-542F-48C8-AF4F-A20CFE07F61E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{673D9E50-542F-48C8-AF4F-A20CFE07F61E}.Release|Any CPU.ActiveCfg = Release|Any CPU

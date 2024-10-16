@@ -15,7 +15,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
     public class AddContestWindowViewModel : PrismBaseViewModel
     {
         private readonly IContainerProvider container;
-        private readonly IEventAggregator? eventAggregator;
+        private readonly IEventAggregator eventAggregator;
         private readonly IContestService contestService;
         public AddContestWindowViewModel(IContainerProvider? container, IEventAggregator? eventAggregator, IContestService? contestService)
         {

@@ -22,6 +22,9 @@ namespace Tabulation.UI.AdminManagement
         {
             containerRegistry.RegisterSingleton<IContestRepository, ContestRepository>();
             containerRegistry.RegisterSingleton<IContestService, ContestService>();
+
+            containerRegistry.RegisterSingleton<ICriteriaRepository, CriteriaRepository>();
+            containerRegistry.RegisterSingleton<ICriteriaService, CriteriaService>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

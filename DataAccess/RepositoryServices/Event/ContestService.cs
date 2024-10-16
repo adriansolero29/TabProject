@@ -27,8 +27,6 @@ namespace RepositoryServices.Event
 
         public async Task Delete(Contest? contest, IDbTransaction? transaction = null)
         {
-
-
             var obj = Helpers.ObjectHelper<Contest>.CloneObjectJson(contest);
             obj.IsDeleted = true;
             await contestRepository.CustomExecuteTransactionalAsync(obj);

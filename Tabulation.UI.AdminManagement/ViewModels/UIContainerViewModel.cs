@@ -78,7 +78,9 @@ namespace Tabulation.UI.AdminManagement.ViewModels
 
         private void openDetails()
         {
+            regionManager.Regions[Helpers.ViewRegionNames.MainViewerRegion].RemoveAll();
             regionManager.RequestNavigate(Helpers.ViewRegionNames.MainViewerRegion, Helpers.ViewRegionNames.MainViewerForm);
+            eventAggregator.GetEvent<PassData<Contest>>().Publish(new Payload<Contest> { Data = SelectedContest });
         }
 
         public async override void add(string? p = null)

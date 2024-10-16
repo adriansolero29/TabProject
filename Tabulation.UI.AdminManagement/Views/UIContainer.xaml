@@ -27,14 +27,12 @@
                 PrimaryColor="DeepPurple"
                 SecondaryColor="Lime" />
         </ResourceDictionary>
-
     </UserControl.Resources>
     <materialDesign:DialogHost Identifier="{x:Static regionNames:DialogNames.UIContainerDialog}">
         <Grid>
             <Grid.ColumnDefinitions>
                 <ColumnDefinition Width="*" />
                 <ColumnDefinition Width="2*" />
-                <ColumnDefinition Width="*" />
             </Grid.ColumnDefinitions>
 
             <Grid Grid.Column="0">
@@ -73,61 +71,8 @@
                                 <RowDefinition Height="auto" />
                                 <RowDefinition Height="*" />
                             </Grid.RowDefinitions>
-                            <Templates:CRUDButtons Grid.Row="0" Width="auto" />
-                            <!--<StackPanel
-                                Grid.Row="0"
-                                HorizontalAlignment="Right"
-                                Orientation="Horizontal">
-                                <Button
-                                    Padding="5,0"
-                                    BorderThickness="0"
-                                    Command="{Binding AddContest}"
-                                    Foreground="SkyBlue"
-                                    Style="{StaticResource MaterialDesignFlatButton}">
-                                    <Button.Content>
-                                        <iconPacks:MaterialDesign
-                                            Width="20"
-                                            Height="20"
-                                            Kind="AddCircle" />
-                                    </Button.Content>
-                                </Button>
-                                <Button
-                                    Padding="5,0"
-                                    Command="{Binding EditContest}"
-                                    Foreground="SkyBlue"
-                                    Style="{StaticResource MaterialDesignFlatButton}">
-                                    <Button.Content>
-                                        <iconPacks:MaterialDesign
-                                            Width="20"
-                                            Height="20"
-                                            Kind="Edit" />
-                                    </Button.Content>
-                                </Button>
-                                <Button
-                                    Padding="5,0"
-                                    Command="{Binding Refresh}"
-                                    Foreground="SkyBlue"
-                                    Style="{StaticResource MaterialDesignFlatButton}">
-                                    <Button.Content>
-                                        <iconPacks:PackIconMaterialDesign
-                                            Width="20"
-                                            Height="20"
-                                            Kind="Refresh" />
-                                    </Button.Content>
-                                </Button>
-                                <Button
-                                    Padding="5,0"
-                                    Command="{Binding DeleteContest}"
-                                    Foreground="OrangeRed"
-                                    Style="{StaticResource MaterialDesignFlatButton}">
-                                    <Button.Content>
-                                        <iconPacks:PackIconMaterialDesign
-                                            Width="20"
-                                            Height="20"
-                                            Kind="Delete" />
-                                    </Button.Content>
-                                </Button>
-                            </StackPanel>-->
+                            <Templates:CRUDButtons Grid.Row="0" />
+
                             <ListView
                                 Grid.Row="1"
                                 Margin="0"

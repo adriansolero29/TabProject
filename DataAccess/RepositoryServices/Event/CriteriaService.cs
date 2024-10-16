@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace RepositoryServices.Event
 {
-    internal class CriteriaService : ICriteriaService
+    public class CriteriaService : ICriteriaService
     {
         private readonly ICriteriaRepository criteriaRepository;
 
@@ -32,6 +32,11 @@ namespace RepositoryServices.Event
         public async Task<IEnumerable<Criteria?>> GetAll(string? condition = null)
         {
             return await criteriaRepository.GetAllAsync(condition) ?? new List<Criteria>();
+        }
+
+        public async Task<IEnumerable<Criteria?>> GetByContest(Guid? contestId)
+        {
+            return await criteriaRepository.GetAllAsync(@"WHERE res.""MainObject""->'Contest'->>'Id' = '" + contestId + "'") ?? new List<Criteria>();
         }
 
         public async Task<Criteria?> Update(Criteria? criteria, IDbTransaction? transaction = null)
