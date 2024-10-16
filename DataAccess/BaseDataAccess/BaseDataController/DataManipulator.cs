@@ -20,11 +20,6 @@ namespace BaseDataAccess.BaseDataController
         where ObjectLoader : ModelBase
         where ModelDTO : DTOModel
     {
-        private class Root
-        {
-            [JsonProperty("MainObject")]
-            public ObjectLoader? MainObject { get; set; }
-        }
         protected async Task ExecuteHardDelete(Guid? objId)
         {
             try
@@ -54,9 +49,15 @@ namespace BaseDataAccess.BaseDataController
         {
             try
             {
-                IEnumerable<Root>? output = null;
+                IEnumerable<ObjectLoader>? result = null;
                 ObjectLoader instance = Activator.CreateInstance<ObjectLoader>();
-                string sql = instance.SqL + " " + condition + " ";
+                string sql =  $@"
+SELECT JSON_AGG(ROW_TO_JSON(res))
+FROM 
+(
+    {instance.SqL} 
+    {condition}
+) res";
                 BeginTransaction();
                 var json = await Connection.DbConnection.StartConnection(async () =>
                 {
@@ -74,9 +75,12 @@ namespace BaseDataAccess.BaseDataController
                 Log.Debug(json);
 
                 if (!string.IsNullOrEmpty(json))
-                    output = JsonConvert.DeserializeObject<IEnumerable<Root>>(json);
+                {
+                    result = JsonConvert.DeserializeObject<IEnumerable<ObjectLoader>>(json);
+                }
+
                 CloseConnections();
-                return (IEnumerable<ObjectLoader>?)output?.Select(a => a.MainObject) ?? new List<ObjectLoader>();
+                return result ?? new List<ObjectLoader>();
             }
             catch (Exception ex)
             {
