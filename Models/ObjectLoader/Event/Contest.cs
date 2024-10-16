@@ -12,27 +12,9 @@ namespace ObjectLoader.Event
     public class Contest : ModelBase
     {
         public override string SqL => @"
-SELECT JSONB_AGG(res)
-FROM 
-(
-	SELECT
-	JSONB_BUILD_OBJECT
-	(
-		'Id', ""Id"",
-		'ModifiedByUserId', ""ModifiedByUserId"",
-		'Version', ""Version"",
-		'Name', ""Name"",
-		'CreatedOn', ""CreatedOn"",
-		'ModifiedOn', ""ModifiedOn"",
-		'DateFrom', ""DateFrom"",
-		'DateTo', ""DateTo"",
-		'Place', ""Place"",
-		'IsDeleted', ""IsDeleted"",
-		'IsCurrentContest', ""IsCurrentContest""
-	) ""MainObject""
-	FROM ""Event"".""Contest""
-	WHERE ""IsDeleted"" = FALSE
-) res
+SELECT *
+FROM ""Event"".""Contest""
+WHERE ""IsDeleted"" = FALSE
 ";
         public override string SqlCount => "";
         public override string SqlInsert => @"INSERT INTO ""Event"".""Contest"" (""Name"", ""CreatedOn"", ""ModifiedOn"", ""DateFrom"", ""DateTo"", ""Place"", ""IsCurrentContest"") VALUES (@Name, @CreatedOn, @ModifiedOn, @DateFrom, @DateTo, @Place, @IsCurrentContest) RETURNING ""Id"";";
