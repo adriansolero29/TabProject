@@ -10,7 +10,36 @@ namespace ObjectLoader.Event
     [Serializable]
     public class Criteria : ModelBase
     {
-        public override string SqL => @"";
+        public override string SqL => @"
+SELECT JSONB_AGG(res)
+FROM (
+    SELECT 
+    JSONB_BUILD_OBJECT
+    (
+        'Id', crt.""Id"", 
+        'ModifiedByUserId', crt.""ModifiedByUserId"", 
+        'CriteriaName', crt.""CriteriaName"", 
+        'Sequence', crt.""Sequence"",
+        'Percentage', crt.""Percentage"", 
+        'CreatedOn', crt.""CreatedOn"", 
+        'ModifiedOn', crt.""ModifiedOn"",
+        'Contest', JSON_BUILD_OBJECT(
+            'Id', conts.""Id"", 
+            'ModifiedByUserId', conts.""ModifiedByUserId"",
+            'Version', conts.""Version"", 
+            'Name', conts.""Name"", 
+            'CreatedOn', conts.""CreatedOn"", 
+            'ModifiedOn', conts.""ModifiedOn"", 
+            'DateFrom', conts.""DateFrom"", 
+            'DateTo', conts.""DateTo"", 
+            'Place', conts.""Place""
+        )
+    ) ""MainObject""
+    FROM ""Event"".""Criterias"" crt
+    LEFT OUTER JOIN ""Event"".""Contest"" conts ON conts.""Id"" = crt.""ContestId""
+    WHERE crt.""IsDeleted"" = FALSE
+) res
+";
         public override string SqlCount => "";
         public override string SqlInsert => @"INSERT INTO ""Event"".""Criterias"" (""ModifiedByUserId"", ""Version"", ""ContestId"", ""CriteriaName"", ""Sequence"", ""Percentage"", ""CreatedOn"", ""ModifiedOn"")VALUES(@ModifiedByUserId, @Version, @ContestId, @CriteriaName, @Sequence, @Percentage, @CreatedOn, @ModifiedOn) RETURNING ""Id""";
         public override string SqlUpdate => "";
