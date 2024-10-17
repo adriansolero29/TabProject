@@ -30,6 +30,8 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         {
             ContestInfo = Helpers.ObjectHelper<Contest>.CloneObjectJson(payload.Data);
             await loadCriterias(ContestInfo?.Id);
+
+            eventAggregator.GetEvent<PassData<Contest>>().Unsubscribe(SubscribeContestData);
         }
 
         private async Task loadCriterias(Guid? contestId)
