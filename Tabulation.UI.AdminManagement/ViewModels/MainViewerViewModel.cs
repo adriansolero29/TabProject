@@ -39,8 +39,11 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             try
             {
                 var result = await criteriaService.GetByContest(contestId);
-                CriteriaList?.Clear();
-                CriteriaList = new ObservableCollection<Criteria?>(result);
+                if (result.Count() > 0)
+                {
+                    CriteriaList?.Clear();
+                    CriteriaList = new ObservableCollection<Criteria?>(result);
+                }
             }
             catch (Exception ex)
             {
