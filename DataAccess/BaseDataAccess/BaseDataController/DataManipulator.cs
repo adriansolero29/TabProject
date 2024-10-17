@@ -55,6 +55,7 @@ namespace BaseDataAccess.BaseDataController
             try
             {
                 IEnumerable<Root>? output = null;
+                IEnumerable<ObjectLoader>? result = null;
                 ObjectLoader instance = Activator.CreateInstance<ObjectLoader>();
                 string sql = instance.SqL + " " + condition + " ";
                 BeginTransaction();
@@ -74,9 +75,12 @@ namespace BaseDataAccess.BaseDataController
                 Log.Debug(json);
 
                 if (!string.IsNullOrEmpty(json))
+                {
                     output = JsonConvert.DeserializeObject<IEnumerable<Root>>(json);
+                    result = (IEnumerable<ObjectLoader>?)output?.Select(a => a.MainObject) ?? new List<ObjectLoader>();
+                }
                 CloseConnections();
-                return (IEnumerable<ObjectLoader>?)output?.Select(a => a.MainObject) ?? new List<ObjectLoader>();
+                return result ?? new List<ObjectLoader>();
             }
             catch (Exception ex)
             {
