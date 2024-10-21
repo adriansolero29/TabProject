@@ -17,6 +17,7 @@
         <ResourceDictionary>
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.BlueGrey.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -29,7 +30,7 @@
 
             <Grid Grid.Row="1">
                 <Grid.RowDefinitions>
-                    <RowDefinition Height="*" />
+                    <RowDefinition Height="350" />
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
 
@@ -54,12 +55,80 @@
                                     VerticalAlignment="Center"
                                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                     Text="Criterias" />
-                                <Templates:AddRefreshButtons HorizontalAlignment="Right" />
+                                <Templates:CRUDButtons HorizontalAlignment="Right" />
                             </DockPanel>
                         </DataTemplate>
                     </GroupBox.HeaderTemplate>
-                    <ItemsControl />
+                    <ScrollViewer Style="{StaticResource MaterialDesignScrollViewer}" VerticalScrollBarVisibility="Auto">
+                        <ItemsControl
+                            Margin="10,0"
+                            FlowDirection="LeftToRight"
+                            ItemsSource="{Binding CustomCriteriaList}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <WrapPanel Orientation="Horizontal" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <materialDesign:Card
+                                        Width="192"
+                                        Height="150"
+                                        Margin="0,6,4,6"
+                                        Background="{StaticResource MaterialDesign.Brush.Primary.Foreground}">
+                                        <StackPanel>
+                                            <Grid>
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="auto" />
+                                                </Grid.ColumnDefinitions>
+                                                <TextBlock
+                                                    Grid.Column="0"
+                                                    Margin="12,16,0,10"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{StaticResource MaterialDesign.Brush.Primary.Dark}"
+                                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                                    Text="{Binding CriteriaInfo.CriteriaName, UpdateSourceTrigger=PropertyChanged}"
+                                                    ToolTip="{Binding CriteriaInfo.CriteriaName}" />
+                                                <TextBlock
+                                                    Grid.Column="1"
+                                                    Margin="12,16,15,10"
+                                                    VerticalAlignment="Center"
+                                                    Foreground="{StaticResource MaterialDesign.Brush.Primary.Dark}"
+                                                    Style="{StaticResource MaterialDesignBody2TextBlock}"
+                                                    Text="{Binding CriteriaInfo.Percentage}" />
+                                            </Grid>
+                                            <Separator Margin="10,0" Style="{StaticResource MaterialDesignDarkSeparator}" />
+                                            <ListView
+                                                Width="auto"
+                                                BorderBrush="Red"
+                                                BorderThickness="1"
+                                                ItemsSource="{Binding CriterionList, UpdateSourceTrigger=PropertyChanged}">
+                                                <ListView.ItemTemplate>
+                                                    <DataTemplate>
+                                                        <Grid>
+                                                            <Grid.ColumnDefinitions>
+                                                                <ColumnDefinition Width="*" />
+                                                                <ColumnDefinition Width="*" />
+                                                            </Grid.ColumnDefinitions>
+                                                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
+                                                            <TextBlock
+                                                                Grid.Column="1"
+                                                                HorizontalAlignment="Right"
+                                                                Text="{Binding Percentage}" />
+                                                        </Grid>
+                                                    </DataTemplate>
+                                                </ListView.ItemTemplate>
+                                            </ListView>
+                                        </StackPanel>
+                                    </materialDesign:Card>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </ScrollViewer>
                 </GroupBox>
+
+                <Grid Grid.Row="1" />
             </Grid>
         </Grid>
     </ScrollViewer>

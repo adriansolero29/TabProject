@@ -10,19 +10,45 @@ namespace ObjectLoader.Event
     {
         public override string SqL => @"
 SELECT JSONB_AGG(res)
-FROM
-(
-    SELECT
-    JSONB_BUILD_OBJECTS()
-)
-SELECT 
-    ctn.""Id"", ctn.""Version"", ctn.""Id"", ctn.""Name"", ctn.""Sequence"", ctn.""Percentage"", ctn.""CreatedOn"", ctn.""ModifiedOn"",
-    ct.""Id"", ct.""Version"", ct.""CriteriaName"", ct.""Sequence"", ct.""Percentage"", ct.""CreatedOn"", ct.""ModifiedOn"",
-    cont.""Id"", cont.""Version"", cont.""Name"", cont.""CreatedOn"", cont.""ModifiedOn"", cont.""DateFrom"", cont.""DateTo"", cont.""Place""
-FROM ""Event"".""Criterions"" ctn
-LEFT OUTER JOIN ""Event"".""Criterias"" ct ON ct.""Id"" = ctn.""CriteriaId""
-LEFT OUTER JOIN ""Event"".""Contest"" cont ON cont.""Id"" = ct.""ContestId""
-WHERE ctn.""IsDeleted"" = FALSE
+FROM (
+    SELECT 
+    JSONB_BUILD_OBJECT
+    (
+        'Id', crtrn.""Id"", 
+        'ModifiedByUserId', crtrn.""ModifiedByUserId"", 
+        'Version', crtrn.""Version"", 
+        'Name', crtrn.""Name"", 
+        'Sequence', crtrn.""Sequence"",
+        'Percentage', crtrn.""Percentage"", 
+        'CreatedOn', crtrn.""CreatedOn"", 
+        'ModifiedOn', crtrn.""ModifiedOn"",
+        'Criteria', JSON_BUILD_OBJECT(
+            'Id', cri.""Id"", 
+            'ModifiedByUserId', cri.""ModifiedByUserId"", 
+            'CriteriaName', cri.""CriteriaName"", 
+            'Sequence', cri.""Sequence"",
+            'Percentage', cri.""Percentage"", 
+            'CreatedOn', cri.""CreatedOn"", 
+            'ModifiedOn', cri.""ModifiedOn"",
+            'Contest', JSON_BUILD_OBJECT(
+                'Id', conts.""Id"", 
+                'ModifiedByUserId', conts.""ModifiedByUserId"",
+                'Version', conts.""Version"", 
+                'Name', conts.""Name"", 
+                'CreatedOn', conts.""CreatedOn"", 
+                'ModifiedOn', conts.""ModifiedOn"", 
+                'DateFrom', conts.""DateFrom"", 
+                'DateTo', conts.""DateTo"", 
+                'Place', conts.""Place""
+            )
+        )
+
+    ) ""MainObject""
+    FROM ""Event"".""Criterions"" crtrn
+    LEFT OUTER JOIN ""Event"".""Criterias"" cri ON cri.""Id"" = crtrn.""CriteriaId""
+    LEFT OUTER JOIN ""Event"".""Contest"" conts ON conts.""Id"" = cri.""ContestId""
+    WHERE crtrn.""IsDeleted"" = FALSE
+) res
 ";
         public override string SqlCount => "";
         public override string SqlInsert => "";
@@ -76,10 +102,12 @@ WHERE ctn.""IsDeleted"" = FALSE
         {
             get
             {
-                return _criteria ?? new Criteria();
+                if (_criteria == null)
+                    _criteria = new Criteria();
+                return _criteria;
             }
-            set
-            {
+             set 
+            { 
                 _criteria = value;
                 OnPropertyChanged();
             }

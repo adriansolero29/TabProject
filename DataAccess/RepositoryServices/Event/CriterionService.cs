@@ -35,6 +35,11 @@ namespace RepositoryServices.Event
             return await criterionRepository.GetAllAsync(condition) ?? new List<Criterion>();
         }
 
+        public async Task<IEnumerable<Criterion>?> GetByCriteria(Guid? criteriaId)
+        {
+            return await criterionRepository.GetByCriteria(criteriaId);
+        }
+
         public async Task<Criterion?> Update(Criterion? criterion, IDbTransaction? transaction = null)
         {
             var obj = Helpers.ObjectHelper<Criterion>.CloneObject(criterion);

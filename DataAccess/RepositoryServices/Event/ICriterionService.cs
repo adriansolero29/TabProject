@@ -13,5 +13,6 @@ namespace RepositoryServices.Event
         Task<Criterion?> Update(Criterion? criterion, IDbTransaction? transaction = null);
         Task Delete(Criterion? criterion, IDbTransaction? transaction = null);
         Task<IEnumerable<Criterion?>> GetAll(string? condition = null);
+        Task<IEnumerable<Criterion>?> GetByCriteria(Guid? criteriaId);
     }
 }

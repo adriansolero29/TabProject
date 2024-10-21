@@ -1,5 +1,6 @@
 ﻿using Base;
 using ObjectLoader.Event;
+using RepositoryServices.CustomModel;
 using RepositoryServices.Event;
 using System;
 using System.Collections.Generic;
@@ -15,11 +16,13 @@ namespace Tabulation.UI.AdminManagement.ViewModels
     {
         private readonly IEventAggregator eventAggregator;
         private readonly ICriteriaService criteriaService;
+        private readonly ICriterionService criterionService;
 
-        public MainViewerViewModel(IEventAggregator eventAggregator, ICriteriaService criteriaService)
+        public MainViewerViewModel(IEventAggregator eventAggregator, ICriteriaService criteriaService, ICriterionService criterionService)
         {
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             this.criteriaService = criteriaService ?? throw new ArgumentNullException(nameof(criteriaService));
+            this.criterionService = criterionService ?? throw new ArgumentNullException(nameof(criterionService));
 
             eventAggregator.GetEvent<PassData<Contest>>().Subscribe(SubscribeContestData);
         }
@@ -28,22 +31,28 @@ namespace Tabulation.UI.AdminManagement.ViewModels
 
         private async void SubscribeContestData(Payload<Contest> payload)
         {
-            ContestInfo = Helpers.ObjectHelper<Contest>.CloneObjectJson(payload.Data);
-            await loadCriterias(ContestInfo?.Id);
+            try
+            {
+                ContestInfo = Helpers.ObjectHelper<Contest>.CloneObjectJson(payload.Data);
+                await loadCriterias(ContestInfo?.Id);
 
-            eventAggregator.GetEvent<PassData<Contest>>().Unsubscribe(SubscribeContestData);
+                var result = await criterionService.GetAll();
+
+                eventAggregator.GetEvent<PassData<Contest>>().Unsubscribe(SubscribeContestData);
+            }
+            catch (Exception ex)
+            {
+                Helpers.ErrorNotification.SendErrorNotification(ex.Message, eventAggregator);
+                throw;
+            }
         }
 
         private async Task loadCriterias(Guid? contestId)
         {
             try
             {
-                var result = await criteriaService.GetByContest(contestId);
-                if (result.Count() > 0)
-                {
-                    CriteriaList?.Clear();
-                    CriteriaList = new ObservableCollection<Criteria?>(result);
-                }
+                var result = await criteriaService.GetFullCriteriaByContest(contestId) ?? new List<CustomCriteria>();
+                CustomCriteriaList = new ObservableCollection<CustomCriteria>(result);
             }
             catch (Exception ex)
             {
@@ -70,6 +79,18 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         #endregion
 
         #region Collections
+
+        private ObservableCollection<CustomCriteria>? _customCriteriaList;
+        public ObservableCollection<CustomCriteria>? CustomCriteriaList
+        {
+            get
+            {
+                if (_customCriteriaList == null)
+                    _customCriteriaList = new ObservableCollection<CustomCriteria>();
+                return _customCriteriaList;
+            }
+            set { SetProperty(ref _customCriteriaList, value); }
+        }
 
         private ObservableCollection<Criteria?>? _criteriaList;
         public ObservableCollection<Criteria?>? CriteriaList

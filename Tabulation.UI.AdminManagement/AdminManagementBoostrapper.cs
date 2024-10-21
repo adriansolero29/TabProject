@@ -25,6 +25,9 @@ namespace Tabulation.UI.AdminManagement
 
             containerRegistry.RegisterSingleton<ICriteriaRepository, CriteriaRepository>();
             containerRegistry.RegisterSingleton<ICriteriaService, CriteriaService>();
+
+            containerRegistry.RegisterSingleton<ICriterionRepository, CriterionRepository>();
+            containerRegistry.RegisterSingleton<ICriterionService, CriterionService>();
         }
 
         protected override void ConfigureModuleCatalog(IModuleCatalog moduleCatalog)

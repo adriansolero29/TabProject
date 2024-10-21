@@ -49,6 +49,8 @@ namespace Tabulation.UI.AdminManagement.ViewModels
                 if (payload.Command == "update")
                     Contest = payload.Data;
             }
+
+            eventAggregator?.GetEvent<PassData<Contest>>().Unsubscribe(SetData);
         }
 
         #endregion

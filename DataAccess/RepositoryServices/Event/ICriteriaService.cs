@@ -1,4 +1,5 @@
 ﻿using ObjectLoader.Event;
+using RepositoryServices.CustomModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -14,5 +15,6 @@ namespace RepositoryServices.Event
         Task Delete(Criteria? criteria, IDbTransaction? transaction = null);
         Task<IEnumerable<Criteria?>> GetAll(string? condition = null);
         Task<IEnumerable<Criteria?>> GetByContest(Guid? contestId);
+        Task<IEnumerable<CustomCriteria>?> GetFullCriteriaByContest(Guid? contestId);
     }
 }

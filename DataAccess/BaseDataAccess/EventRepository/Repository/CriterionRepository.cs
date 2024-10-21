@@ -40,10 +40,17 @@ namespace BaseDataAccess.EventRepository.Repository
             return await base.RetrieveAsync(condition);
         }
 
+        public async Task<IEnumerable<Criterion>?> GetByCriteria(Guid? criteriaId)
+        {
+            var result = await base.RetrieveAsync(@"WHERE res.""MainObject""->'Criteria'->>'Id' = '" + criteriaId + "'");
+            return result ?? new List<Criterion>();
+        }
+
         public async Task<Criterion?> GetByIdAsync(Guid? id, string? condition = null)
         {
             var result = await base.RetrieveAsync(@"WHERE res.""MainObject""->>'Id' = '" + id + "'");
             return result.FirstOrDefault();
         }
+
     }
 }
