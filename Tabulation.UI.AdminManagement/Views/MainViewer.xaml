@@ -4,6 +4,7 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Templates="clr-namespace:Templates.CustomMessageBox.Views;assembly=Templates"
     xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
     xmlns:local="clr-namespace:Tabulation.UI.AdminManagement.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
@@ -18,6 +19,7 @@
             <ResourceDictionary.MergedDictionaries>
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignColors;component/Themes/Recommended/Primary/MaterialDesignColor.BlueGrey.xaml" />
                 <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.DataGrid.xaml" />
+                <ResourceDictionary Source="pack://application:,,,/MaterialDesignThemes.Wpf;component/Themes/MaterialDesignTheme.ScrollViewer.xaml" />
             </ResourceDictionary.MergedDictionaries>
         </ResourceDictionary>
     </UserControl.Resources>
@@ -73,13 +75,21 @@
                                 <DataTemplate>
                                     <materialDesign:Card
                                         Width="192"
-                                        Height="150"
+                                        Height="220"
                                         Margin="0,6,4,6"
                                         Background="{StaticResource MaterialDesign.Brush.Primary.Foreground}">
-                                        <StackPanel>
-                                            <Grid>
+                                        <Grid>
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="*" />
+                                                <RowDefinition Height="auto" />
+                                                <RowDefinition Height="auto" />
+                                            </Grid.RowDefinitions>
+                                            <Grid Grid.Row="0">
                                                 <Grid.ColumnDefinitions>
                                                     <ColumnDefinition Width="*" />
+                                                    <ColumnDefinition Width="auto" />
                                                     <ColumnDefinition Width="auto" />
                                                 </Grid.ColumnDefinitions>
                                                 <TextBlock
@@ -98,29 +108,77 @@
                                                     Style="{StaticResource MaterialDesignBody2TextBlock}"
                                                     Text="{Binding CriteriaInfo.Percentage}" />
                                             </Grid>
-                                            <Separator Margin="10,0" Style="{StaticResource MaterialDesignDarkSeparator}" />
-                                            <ListView
-                                                Width="auto"
-                                                BorderBrush="Red"
-                                                BorderThickness="1"
-                                                ItemsSource="{Binding CriterionList, UpdateSourceTrigger=PropertyChanged}">
-                                                <ListView.ItemTemplate>
-                                                    <DataTemplate>
-                                                        <Grid>
-                                                            <Grid.ColumnDefinitions>
-                                                                <ColumnDefinition Width="*" />
-                                                                <ColumnDefinition Width="*" />
-                                                            </Grid.ColumnDefinitions>
-                                                            <TextBlock Grid.Column="0" Text="{Binding Name}" />
-                                                            <TextBlock
-                                                                Grid.Column="1"
-                                                                HorizontalAlignment="Right"
-                                                                Text="{Binding Percentage}" />
-                                                        </Grid>
-                                                    </DataTemplate>
-                                                </ListView.ItemTemplate>
-                                            </ListView>
-                                        </StackPanel>
+                                            <Separator
+                                                Grid.Row="1"
+                                                Grid.ColumnSpan="2"
+                                                Margin="10,0"
+                                                Style="{StaticResource MaterialDesignDarkSeparator}" />
+                                            <ScrollViewer
+                                                Grid.Row="2"
+                                                Style="{x:Null}"
+                                                VerticalScrollBarVisibility="Auto">
+                                                <ItemsControl ItemsSource="{Binding CriterionList}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Grid Margin="4">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*" />
+                                                                    <ColumnDefinition Width="auto" />
+                                                                </Grid.ColumnDefinitions>
+                                                                <TextBlock
+                                                                    Grid.Column="0"
+                                                                    Margin="10,-2"
+                                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                                    Text="{Binding Name}" />
+                                                                <TextBlock
+                                                                    Grid.Column="1"
+                                                                    Margin="20,-2"
+                                                                    Style="{StaticResource MaterialDesignCaptionTextBlock}"
+                                                                    Text="{Binding Percentage}" />
+                                                            </Grid>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                            <Separator
+                                                Grid.Row="3"
+                                                Grid.ColumnSpan="2"
+                                                Margin="10,0"
+                                                Style="{StaticResource MaterialDesignDarkSeparator}" />
+                                            <StackPanel
+                                                Grid.Row="4"
+                                                Margin="0,5,0,5"
+                                                HorizontalAlignment="Right"
+                                                Orientation="Horizontal">
+                                                <Button
+                                                    Padding="5,0"
+                                                    BorderThickness="0"
+                                                    Command="{Binding DataContext.EditCriterion, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Foreground="SkyBlue"
+                                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                                    <Button.Content>
+                                                        <iconPacks:PackIconMaterialDesign
+                                                            Width="20"
+                                                            Height="20"
+                                                            Kind="Edit" />
+                                                    </Button.Content>
+                                                </Button>
+                                                <Button
+                                                    Padding="5,0"
+                                                    Command="{Binding DataContext.DeleteCriterion, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    Foreground="OrangeRed"
+                                                    Style="{StaticResource MaterialDesignFlatButton}">
+                                                    <Button.Content>
+                                                        <iconPacks:PackIconMaterialDesign
+                                                            Width="20"
+                                                            Height="20"
+                                                            Kind="Delete" />
+                                                    </Button.Content>
+                                                </Button>
+                                            </StackPanel>
+                                        </Grid>
                                     </materialDesign:Card>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>

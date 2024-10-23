@@ -27,7 +27,29 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             eventAggregator.GetEvent<PassData<Contest>>().Subscribe(SubscribeContestData);
         }
 
+        #region Commands
+
+        private DelegateCommand<object>? _editCriterion;
+        public DelegateCommand<object>? EditCriterion =>
+            _editCriterion ?? (_editCriterion = new DelegateCommand<object>(editCriterion));
+
+        private DelegateCommand _deleteCriterion;
+        public DelegateCommand? DeleteCriterion =>
+            _deleteCriterion ?? (_deleteCriterion = new DelegateCommand(deleteCriterion));
+
+        #endregion
+
         #region Methods
+
+        private void deleteCriterion()
+        {
+
+        }
+
+        private void editCriterion(object o)
+        {
+
+        }
 
         private async void SubscribeContestData(Payload<Contest> payload)
         {
