@@ -1,0 +1,41 @@
+﻿<UserControl
+    x:Class="Templates.CustomMessageBox.Views.CustomTextbox"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:iconPacks="http://metro.mahapps.com/winfx/xaml/iconpacks"
+    xmlns:local="clr-namespace:Templates.CustomMessageBox.Views"
+    xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="customTextbox"
+    mc:Ignorable="d">
+    <UserControl.Resources>
+        <ResourceDictionary>
+            <ResourceDictionary.MergedDictionaries>
+                <ResourceDictionary Source="\MaterialDesign.xaml" />
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+    </UserControl.Resources>
+    <Grid>
+        <DockPanel Margin="0,6,10,6">
+            <iconPacks:PackIconMaterialDesign
+                Width="16"
+                Height="16"
+                Margin="2,0,8,4"
+                VerticalAlignment="Bottom"
+                Foreground="{Binding ElementName=txt, Path=BorderBrush}"
+                Kind="{Binding ElementName=customTextbox, Path=Icon}" />
+            <TextBox
+                x:Name="txt"
+                Width="160"
+                Height="auto"
+                MaxWidth="200"
+                VerticalContentAlignment="Bottom"
+                materialDesign:HintAssist.FloatingHintHorizontalAlignment="Left"
+                materialDesign:HintAssist.Hint="{Binding ElementName=customTextbox, Path=HintText}"
+                materialDesign:HintAssist.HintHorizontalAlignment="Left"
+                Style="{StaticResource MaterialDesignFloatingHintTextBox}"
+                Text="{Binding ElementName=customTextbox, Path=Text}" />
+        </DockPanel>
+    </Grid>
+</UserControl>

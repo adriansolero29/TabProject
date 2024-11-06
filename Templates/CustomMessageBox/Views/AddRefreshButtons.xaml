@@ -7,6 +7,7 @@
     xmlns:local="clr-namespace:Templates.CustomMessageBox.Views"
     xmlns:materialDesign="http://materialdesigninxaml.net/winfx/xaml/themes"
     xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    x:Name="addRefresh"
     mc:Ignorable="d">
     <StackPanel
         Grid.Row="0"
@@ -15,7 +16,7 @@
         <Button
             Padding="5,0"
             BorderThickness="0"
-            Command="{Binding Add}"
+            Command="{Binding ElementName=addRefresh, Path=AddCommand}"
             Foreground="SkyBlue"
             Style="{StaticResource MaterialDesignFlatButton}">
             <Button.Content>
@@ -27,7 +28,7 @@
         </Button>
         <Button
             Padding="5,0"
-            Command="{Binding Refresh}"
+            Command="{Binding ElementName=addRefresh, Path=RefreshCommand}"
             Foreground="SkyBlue"
             Style="{StaticResource MaterialDesignFlatButton}">
             <Button.Content>

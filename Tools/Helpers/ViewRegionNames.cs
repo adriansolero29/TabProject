@@ -20,6 +20,7 @@ namespace Helpers
         public const string UIContainer = "UICONTAINER";
         public const string UIContainerRegion = "UICONTAINERREGION";
         public const string AddContestWindow = "ADDCONTESTWINDOW";
+        public const string AddCriteriaWindow = "ADDCRITERIAWINDOW";
         public const string MainViewerForm = "MAINVIEWERFORM";
 
         // MessageBoxes

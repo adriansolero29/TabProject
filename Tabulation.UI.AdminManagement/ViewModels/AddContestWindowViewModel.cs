@@ -7,12 +7,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tabulation.UI.AdminManagement.BaseViewModels;
 using Templates;
 using static Base.EventAggregators;
 
 namespace Tabulation.UI.AdminManagement.ViewModels
 {
-    public class AddContestWindowViewModel : PrismBaseViewModel
+    public class AddContestWindowViewModel : DialogsBaseViewModel
     {
         private readonly IContainerProvider container;
         private readonly IEventAggregator eventAggregator;
@@ -67,6 +68,20 @@ namespace Tabulation.UI.AdminManagement.ViewModels
                 return _contest;
             }
             set { SetProperty(ref _contest, value); }
+        }
+
+        #endregion
+
+        #region DialogAware
+
+        public override bool CanCloseDialog() => true;
+
+        public override void OnDialogClosed()
+        {
+        }
+
+        public override void OnDialogOpened(IDialogParameters parameters)
+        {
         }
 
         #endregion

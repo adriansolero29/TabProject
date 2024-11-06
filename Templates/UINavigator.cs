@@ -8,7 +8,7 @@ namespace Templates
 {
     public class UINavigator : PrismBaseViewModel
     {
-        public async static Task<object?> ShowDialog(IContainerProvider? container, string viewName, string dialogName)
+        public async static Task<object?> ShowDialogHost(IContainerProvider? container, string viewName, string dialogName)
         {
             object? output = null;
             object? view = container?.Resolve<object>(viewName);
@@ -18,6 +18,11 @@ namespace Templates
             view = null;
 
             return output;
+        }
+
+        public async static Task OpenDialog(IContainerProvider container, IDialogService dialogService, string? viewName, IDialogParameters? dialogParam = null)
+        {
+            await dialogService.ShowDialogAsync(viewName, dialogParam);
         }
 
         public async static Task ShowDialogPassData<T>(IContainerProvider? container, string viewName, string dialogName, IEventAggregator? eventAggregator, T? data, string command) where T : class

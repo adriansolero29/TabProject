@@ -24,5 +24,30 @@ namespace Templates.CustomMessageBox.Views
         {
             InitializeComponent();
         }
+
+        public ICommand AddCommand
+        {
+            get { return (ICommand)GetValue(AddCommandProperty); }
+            set { SetValue(AddCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for AddCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty AddCommandProperty =
+            DependencyProperty.Register("AddCommand", typeof(ICommand), typeof(AddRefreshButtons), new PropertyMetadata());
+
+
+
+        public ICommand RefreshCommand
+        {
+            get { return (ICommand)GetValue(RefreshCommandProperty); }
+            set { SetValue(RefreshCommandProperty, value); }
+        }
+
+        // Using a DependencyProperty as the backing store for RefreshCommand.  This enables animation, styling, binding, etc...
+        public static readonly DependencyProperty RefreshCommandProperty =
+            DependencyProperty.Register("RefreshCommand", typeof(ICommand), typeof(AddRefreshButtons), new PropertyMetadata());
+
+
+
     }
 }

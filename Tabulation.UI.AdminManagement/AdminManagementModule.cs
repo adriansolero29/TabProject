@@ -28,6 +28,8 @@ namespace Tabulation.UI.AdminManagement
             regionManager.RegisterViewWithRegion(Helpers.ViewRegionNames.ShellWindowRegion, Helpers.ViewRegionNames.UIContainer);
 
             containerRegistry.RegisterForNavigation<AddContestWindow>(Helpers.ViewRegionNames.AddContestWindow);
+            containerRegistry.RegisterForNavigation<AddCriteriaWindow>(Helpers.ViewRegionNames.AddCriteriaWindow);
+
             containerRegistry.RegisterForNavigation<Templates.CustomMessageBox.Views.Success>(Helpers.DialogNames.SuccessDialog);
             containerRegistry.RegisterForNavigation<Templates.CustomMessageBox.Views.YesNo>(Helpers.DialogNames.YesNoDialog);
             containerRegistry.RegisterForNavigation<Templates.CustomMessageBox.Views.Warning>(Helpers.DialogNames.WarningDialog);

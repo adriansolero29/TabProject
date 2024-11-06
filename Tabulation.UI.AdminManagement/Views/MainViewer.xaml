@@ -57,7 +57,11 @@
                                     VerticalAlignment="Center"
                                     Style="{StaticResource MaterialDesignHeadline6TextBlock}"
                                     Text="Criterias" />
-                                <Templates:CRUDButtons HorizontalAlignment="Right" />
+                                <Templates:AddRefreshButtons
+                                    HorizontalAlignment="Right"
+                                    AddCommand="{Binding AddCriteria}"
+                                    DataContext="{Binding RelativeSource={RelativeSource AncestorType=GroupBox}, Path=DataContext}"
+                                    RefreshCommand="{Binding RefreshCriteria}" />
                             </DockPanel>
                         </DataTemplate>
                     </GroupBox.HeaderTemplate>

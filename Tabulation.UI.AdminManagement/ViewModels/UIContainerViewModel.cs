@@ -8,6 +8,8 @@ using System;
 using System.Collections.Generic;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Runtime.CompilerServices;
+using System.Security.AccessControl;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
@@ -26,12 +28,14 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         private readonly IContainerProvider container;
         private readonly IEventAggregator eventAggregator;
         private readonly IRegionManager regionManager;
+        private readonly IDialogService dialogService;
 
-        public UIContainerViewModel(IContainerProvider container, IEventAggregator eventAggregator, IRegionManager regionManager, IContestService? contestService)
+        public UIContainerViewModel(IContainerProvider container, IEventAggregator eventAggregator, IRegionManager regionManager, IDialogService dialogService, IContestService? contestService)
         {
             this.container = container ?? throw new ArgumentNullException(nameof(container));
             this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
             this.regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
+            this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService)); ;
             this.contestService = contestService ?? throw new ArgumentNullException(nameof(contestService));
             _dialogCoordinator = (DialogCoordinator?)DialogCoordinator.Instance;
 
@@ -66,9 +70,9 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         {
             try
             {
-                var contestList = await contestService.GetAll();
+                var contestList = await contestService.GetAll() ?? new List<Contest>();
                 ContestList?.Clear();
-                ContestList?.AddRange(contestList);
+                ContestList = new ObservableCollection<Contest?>(contestList);
             }
             catch (Exception ex)
             {
@@ -87,7 +91,8 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         {
             try
             {
-                await UINavigator.ShowDialog(container, Helpers.ViewRegionNames.AddContestWindow, Helpers.DialogNames.UIContainerDialog);
+                await UINavigator.OpenDialog(container, dialogService, Helpers.ViewRegionNames.AddContestWindow);
+                //await UINavigator.ShowDialogHost(container, Helpers.ViewRegionNames.AddContestWindow, Helpers.DialogNames.UIContainerDialog);
                 refresh();
             }
             catch (Exception ex)
@@ -101,7 +106,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             if (Helpers.SelectedItem.IsItemValid(SelectedContest?.Id))
                 await UINavigator.ShowDialogPassData<Contest>(container, Helpers.ViewRegionNames.AddContestWindow, Helpers.DialogNames.UIContainerDialog, eventAggregator, Helpers.ObjectHelper<Contest>.CloneObjectJson(SelectedContest), "update");
             else
-                await UINavigator.ShowDialog(container, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
+                await UINavigator.ShowDialogHost(container, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
 
             refresh();
         }
@@ -112,12 +117,12 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             {
                 if (Helpers.SelectedItem.IsItemValid(SelectedContest?.Id))
                 {
-                    var delete = await UINavigator.ShowDialog(container, Helpers.DialogNames.YesNoDialog, DialogNames.UIContainerDialog) ?? false;
+                    var delete = await UINavigator.ShowDialogHost(container, Helpers.DialogNames.YesNoDialog, DialogNames.UIContainerDialog) ?? false;
                     if ((bool)delete)
                         await contestService.Delete(SelectedContest);
                 }
                 else
-                    await UINavigator.ShowDialog(container, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
+                    await UINavigator.ShowDialogHost(container, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
 
                 refresh();
             }
@@ -148,7 +153,12 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             set 
             { 
                 SetProperty(ref _selectedContest, value);
-                openDetails();
+                if (value != null && value?.Id != null)
+                {
+                    openDetails();
+                }
+                else
+                    regionManager.Regions[Helpers.ViewRegionNames.MainViewerRegion].RemoveAll();
             }
         }
 
