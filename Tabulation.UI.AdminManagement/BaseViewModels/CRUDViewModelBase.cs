@@ -14,7 +14,7 @@ using Templates;
 
 namespace Tabulation.UI.AdminManagement.BaseViewModels
 {
-    public abstract class BaseVMWithCRUDCommands : PrismBaseViewModel
+    public abstract class CRUDViewModelBase : PrismBaseViewModel
     {
         #region Commands
 

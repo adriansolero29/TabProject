@@ -6,6 +6,10 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="AutoMapper" Version="10.0.0" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\Models\ObjectLoader\ObjectLoader.csproj" />
     <ProjectReference Include="..\BaseDataAccess\BaseDataAccess.csproj" />
   </ItemGroup>

@@ -18,9 +18,9 @@ namespace Tabulation.UI.AdminManagement.Views
     /// <summary>
     /// Interaction logic for MainViewer.xaml
     /// </summary>
-    public partial class MainViewer : UserControl
+    public partial class CriteriaViewer : UserControl
     {
-        public MainViewer()
+        public CriteriaViewer()
         {
             InitializeComponent();
         }

@@ -15,16 +15,15 @@ namespace Tabulation.UI.AdminManagement.ViewModels
 {
     public class AddContestWindowViewModel : DialogsBaseViewModel
     {
-        private readonly IContainerProvider container;
-        private readonly IEventAggregator eventAggregator;
+        public MainProviderComposition MainProviderComposition { get; }
         private readonly IContestService contestService;
-        public AddContestWindowViewModel(IContainerProvider? container, IEventAggregator? eventAggregator, IContestService? contestService)
+
+        public AddContestWindowViewModel(MainProviderComposition mainProviderComposition, IContestService? contestService)
         {
-            this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this.container = container ?? throw new ArgumentNullException(nameof(container));
+            MainProviderComposition = mainProviderComposition;
             this.contestService = contestService ?? throw new ArgumentNullException(nameof(contestService));
 
-            eventAggregator?.GetEvent<PassData<Contest>>().Subscribe(SetData);
+            MainProviderComposition.EventAggregator?.GetEvent<PassData<Contest>>().Subscribe(SetData);
         }
 
         #region Commands
@@ -40,7 +39,8 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         private async void save()
         {
             await contestService.Create(Contest);
-            DialogHost.CloseDialogCommand.Execute(null, null);
+            RequestClose.Invoke();
+            MainProviderComposition.EventAggregator.GetEvent<NotifyData>().Publish(nameof(UIContainerViewModel));
         }
 
         private void SetData(Payload<Contest> payload)
@@ -50,8 +50,6 @@ namespace Tabulation.UI.AdminManagement.ViewModels
                 if (payload.Command == "update")
                     Contest = payload.Data;
             }
-
-            eventAggregator?.GetEvent<PassData<Contest>>().Unsubscribe(SetData);
         }
 
         #endregion
@@ -59,6 +57,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         #region Properties
 
         private Contest? _contest;
+
         public Contest? Contest
         {
             get
@@ -69,6 +68,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             }
             set { SetProperty(ref _contest, value); }
         }
+
 
         #endregion
 

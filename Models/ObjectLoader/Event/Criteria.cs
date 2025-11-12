@@ -42,7 +42,7 @@ FROM (
 ";
         public override string SqlCount => "";
         public override string SqlInsert => @"INSERT INTO ""Event"".""Criterias"" (""ModifiedByUserId"", ""Version"", ""ContestId"", ""CriteriaName"", ""Sequence"", ""Percentage"", ""CreatedOn"", ""ModifiedOn"")VALUES(@ModifiedByUserId, @Version, @ContestId, @CriteriaName, @Sequence, @Percentage, @CreatedOn, @ModifiedOn) RETURNING ""Id""";
-        public override string SqlUpdate => "";
+        public override string SqlUpdate => $@"UPDATE ""Event"".""Criterias"" SET ""ContestId"" = @ContestId, ""CriteriaName"" = @CriteriaName, ""Sequence"" = @Sequence, ""Percentage"" = @Percentage, ""ModifiedOn"" = @ModifiedOn WHERE ""Id"" = @Id";
         public override string SqlHardDelete => "";
 
         private Guid? _id;

@@ -9,41 +9,37 @@ using System.ComponentModel;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Tabulation.UI.AdminManagement.BaseViewModels;
 using Templates;
 using static Base.EventAggregators;
 
 namespace Tabulation.UI.AdminManagement.ViewModels
 {
-    public class MainViewerViewModel : PrismBaseViewModel
+    public class CriteriaViewerViewModel : PrismBaseViewModel
     {
-        private readonly IEventAggregator eventAggregator;
-        private readonly IDialogService dialogService;
-        private readonly IRegionManager regionManager;
-        private readonly IContainerProvider container;
+        public MainProviderComposition MainProviderComposition { get; }
+
         private readonly ICriteriaService criteriaService;
         private readonly ICriterionService criterionService;
 
-        public MainViewerViewModel(IEventAggregator eventAggregator, IDialogService dialogService, IRegionManager regionManager, IContainerProvider container, ICriteriaService criteriaService, ICriterionService criterionService)
+        public CriteriaViewerViewModel(MainProviderComposition mainProviderComposition, ICriteriaService criteriaService, ICriterionService criterionService)
         {
-            this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService));
-            this.regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
-            this.container = container ?? throw new ArgumentNullException(nameof(container));
+            MainProviderComposition = mainProviderComposition;
             this.criteriaService = criteriaService ?? throw new ArgumentNullException(nameof(criteriaService));
             this.criterionService = criterionService ?? throw new ArgumentNullException(nameof(criterionService));
 
-            eventAggregator.GetEvent<PassData<Contest>>().Subscribe(SubscribeContestData);
+            MainProviderComposition.EventAggregator.GetEvent<PassData<Contest>>().Subscribe(SubscribeContestData);
         }
 
         #region Commands
 
-        private DelegateCommand<object>? _editCriterion;
-        public DelegateCommand<object>? EditCriterion =>
-            _editCriterion ?? (_editCriterion = new DelegateCommand<object>(editCriterion));
+        private DelegateCommand<CustomCriteria>? _editCriteria;
+        public DelegateCommand<CustomCriteria>? EditCriteria =>
+            _editCriteria ?? (_editCriteria = new DelegateCommand<CustomCriteria>(editCriteria));
 
-        private DelegateCommand? _deleteCriterion;
-        public DelegateCommand? DeleteCriterion =>
-            _deleteCriterion ?? (_deleteCriterion = new DelegateCommand(deleteCriterion));
+        private DelegateCommand? _deleteCriteria;
+        public DelegateCommand? DeleteCriteria =>
+            _deleteCriteria ?? (_deleteCriteria = new DelegateCommand(deleteCriteria));
 
         private DelegateCommand? _addCriteria;
         public DelegateCommand? AddCriteria =>
@@ -53,9 +49,19 @@ namespace Tabulation.UI.AdminManagement.ViewModels
         public DelegateCommand? RefreshCriteria =>
             _refreshCriteria ?? (_refreshCriteria = new DelegateCommand(refreshCriteria));
 
+        private DelegateCommand _addCandidate;
+        public DelegateCommand AddCandidate =>
+            _addCandidate ?? (_addCandidate = new DelegateCommand(addCandidate));
+
         #endregion
 
         #region Methods
+
+        private async void addCandidate()
+        {
+            await UINavigator.OpenDialog(MainProviderComposition.ContainerProvider, MainProviderComposition.DialogService, Helpers.ViewRegionNames.AddCandidateWindow, ContestInfo);
+            MainProviderComposition.EventAggregator.GetEvent<PassData<Contest>>().Publish(new Payload<Contest> { Data = ContestInfo });
+        }
 
         void refreshCriteria()
         {
@@ -63,17 +69,18 @@ namespace Tabulation.UI.AdminManagement.ViewModels
 
         private async void addCriteria()
         {
-            await UINavigator.OpenDialog(container, dialogService, Helpers.ViewRegionNames.AddCriteriaWindow);
+            await UINavigator.OpenDialog(MainProviderComposition.ContainerProvider, MainProviderComposition.DialogService, Helpers.ViewRegionNames.AddCriteriaWindow, ContestInfo);
+            MainProviderComposition.EventAggregator.GetEvent<PassData<Contest>>().Publish(new Payload<Contest> { Data = ContestInfo });
         }
 
-        private void deleteCriterion()
+        private void deleteCriteria()
         {
 
         }
 
-        private void editCriterion(object o)
+        private async void editCriteria(CustomCriteria o)
         {
-
+            await UINavigator.ShowDialogPassData<CustomCriteria>(MainProviderComposition.ContainerProvider, Helpers.ViewRegionNames.AddCriteriaWindow, "", MainProviderComposition.EventAggregator, o, "update", MainProviderComposition.DialogService);
         }
 
         private async void SubscribeContestData(Payload<Contest> payload)
@@ -85,11 +92,11 @@ namespace Tabulation.UI.AdminManagement.ViewModels
 
                 var result = await criterionService.GetAll();
 
-                eventAggregator.GetEvent<PassData<Contest>>().Unsubscribe(SubscribeContestData);
+                MainProviderComposition.EventAggregator.GetEvent<PassData<Contest>>().Unsubscribe(SubscribeContestData);
             }
             catch (Exception ex)
             {
-                Helpers.ErrorNotification.SendErrorNotification(ex.Message, eventAggregator);
+                Helpers.ErrorNotification.SendErrorNotification(ex, MainProviderComposition.EventAggregator);
                 throw;
             }
         }
@@ -103,7 +110,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             }
             catch (Exception ex)
             {
-                Helpers.ErrorNotification.SendErrorNotification(ex.Message, eventAggregator);
+                Helpers.ErrorNotification.SendErrorNotification(ex, MainProviderComposition.EventAggregator);
             }
         }
 
@@ -150,6 +157,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             }
             set { SetProperty(ref _criteriaList, value); }
         }
+
 
         #endregion
 

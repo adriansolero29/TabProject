@@ -10,8 +10,7 @@ namespace BaseDataAccess.BaseDataController
     {
         Task<T?> GetByIdAsync(Guid? id, string? condition = null);
         Task<IEnumerable<T>?> GetAllAsync(string? condition = null);
-        Task<T?> ExecuteTransactionalAsync(T? entity, IDbTransaction? transaction);
-        Task<T?> CustomExecuteAsync(T? entity = null);
-        Task<T?> CustomExecuteTransactionalAsync(T? entity = null, IDbTransaction? transaction = null);
+        Task<T?> ExecuteAsyncTran(T? entity, IDbConnection connection, IDbTransaction transaction);
+        Task<T?> ExecuteAsync(T? entity);
     }
 }

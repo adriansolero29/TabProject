@@ -6,6 +6,7 @@ using System.Text;
 
 namespace ObjectLoader.Event
 {
+    [Serializable]
     public class Criterion : ModelBase
     {
         public override string SqL => @"
@@ -51,8 +52,8 @@ FROM (
 ) res
 ";
         public override string SqlCount => "";
-        public override string SqlInsert => "";
-        public override string SqlUpdate => "";
+        public override string SqlInsert => $@"INSERT INTO ""Event"".""Criterions"" (""CriteriaId"", ""Name"", ""Sequence"", ""Percentage"", ""CreatedOn"") VALUES (@CriteriaId, @Name, @Sequence, @Percentage, @CreatedOn) RETURNING ""Id""";
+        public override string SqlUpdate => $@"UPDATE ""Event"".""Criterions"" SET ""CriteriaId"" = @CriteriaId, ""Name"" = @Name, ""Sequence"" = @Sequence, ""Percentage"" = @Percentage, ""ModifiedOn"" = @ModifiedOn WHERE ""Id"" = @Id";
         public override string SqlHardDelete => "";
 
         private Guid? _id;

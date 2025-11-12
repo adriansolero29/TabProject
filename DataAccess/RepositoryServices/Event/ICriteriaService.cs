@@ -11,10 +11,12 @@ namespace RepositoryServices.Event
     public interface ICriteriaService
     {
         Task<Criteria?> Create(Criteria? criteria, IDbTransaction? transaction = null);
+        Task Create(CustomCriteria? criteria);
         Task<Criteria?> Update(Criteria? criteria, IDbTransaction? transaction = null);
         Task Delete(Criteria? criteria, IDbTransaction? transaction = null);
         Task<IEnumerable<Criteria?>> GetAll(string? condition = null);
         Task<IEnumerable<Criteria?>> GetByContest(Guid? contestId);
         Task<IEnumerable<CustomCriteria>?> GetFullCriteriaByContest(Guid? contestId);
+        Task CreateFullCriteria(CustomCriteria? obj);
     }
 }

@@ -49,13 +49,17 @@
                     <RowDefinition Height="*" />
                 </Grid.RowDefinitions>
                 <DockPanel Grid.Row="0" LastChildFill="True">
-                    <Templates:CustomTextbox HintText="Criteria Name" Icon="Label" />
+                    <Templates:CustomTextbox
+                        HintText="Criteria Name"
+                        Icon="Label"
+                        Text="{Binding CustomCriteriaInfo.CriteriaInfo.CriteriaName, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                     <Templates:CustomTextbox
                         Width="120"
                         Margin="10,0"
                         HorizontalAlignment="Right"
                         HintText="Percentage"
-                        Icon="PercentSharp" />
+                        Icon="PercentSharp"
+                        Text="{Binding CustomCriteriaInfo.CriteriaInfo.Percentage, Mode=TwoWay, UpdateSourceTrigger=PropertyChanged}" />
                 </DockPanel>
                 <GroupBox
                     Grid.Row="1"
@@ -92,7 +96,7 @@
                                                 Width="50"
                                                 Margin="0"
                                                 Padding="0"
-                                                Command="{Binding RemoveCriterion}"
+                                                Command="{Binding RelativeSource={RelativeSource AncestorType=ItemsControl}, Path=DataContext.RemoveCriterion}"
                                                 CommandParameter="{Binding}"
                                                 Foreground="OrangeRed"
                                                 Style="{StaticResource MaterialDesignFlatButton}">
@@ -108,28 +112,7 @@
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </ScrollViewer>
-                        <DockPanel Grid.Row="2" HorizontalAlignment="Right">
-                            <Button Command="{Binding Save}" Style="{StaticResource MaterialDesignFlatDarkButton}">
-                                <Button.Content>
-
-                                    <DockPanel>
-                                        <icon:PackIconMaterialDesign Kind="Save" />
-                                        <TextBlock Text="Save" />
-                                    </DockPanel>
-                                </Button.Content>
-                            </Button>
-                            <Button
-                                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
-                                Foreground="OrangeRed"
-                                Style="{StaticResource MaterialDesignFlatButton}">
-                                <Button.Content>
-                                    <DockPanel>
-                                        <icon:PackIconMaterialDesign Kind="AssignmentReturn" />
-                                        <TextBlock Text="Cancel" />
-                                    </DockPanel>
-                                </Button.Content>
-                            </Button>
-                        </DockPanel>
+                        <Templates:FormButtons Grid.Row="2" />
                     </Grid>
                 </GroupBox>
             </Grid>

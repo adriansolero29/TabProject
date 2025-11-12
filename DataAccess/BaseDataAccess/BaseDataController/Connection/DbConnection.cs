@@ -15,8 +15,6 @@ namespace BaseDataAccess.BaseDataController.Connection
 
         public static async Task<string> StartConnection(Func<Task<string>> queryHandling, string query)
         {
-
-
             return await queryHandling.Invoke();
         }
     }

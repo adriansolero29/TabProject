@@ -1,4 +1,6 @@
-﻿using BaseDataAccess.EventRepository.Interface;
+﻿using BaseDataAccess.BaseDataController;
+using BaseDataAccess.EventRepository.Interface;
+using DTOs.Event;
 using ObjectLoader.Event;
 using RepositoryServices.CustomModel;
 using System;
@@ -21,16 +23,47 @@ namespace RepositoryServices.Event
             this.criterionService = criterionService;
         }
 
-        public async Task<Criteria?> Create(Criteria? criteria, IDbTransaction? transaction = null)
+        public Task<Criteria?> Create(Criteria? criteria, IDbTransaction? transaction = null)
         {
-            return await criteriaRepository.CustomExecuteTransactionalAsync(criteria, transaction);
+            throw new NotImplementedException();
         }
 
-        public async Task Delete(Criteria? criteria, IDbTransaction? transaction = null)
+        public Task Create(CustomCriteria? criteria)
         {
-            var obj = Helpers.ObjectHelper<Criteria>.CloneObject(criteria);
-            obj.IsDeleted = true;
-            await criteriaRepository.ExecuteTransactionalAsync(obj, transaction);
+            throw new NotImplementedException();
+        }
+
+        public async Task CreateFullCriteria(CustomCriteria? obj)
+        {
+            try
+            {
+                var connection = DataManipulator<Criteria, CriteriaDTO>.OpenConnection();
+                var transaction = DataManipulator<Criteria, CriteriaDTO>.BeginTransaction();
+                var criteria = await criteriaRepository.ExecuteAsyncTran(obj?.CriteriaInfo, connection, transaction);
+
+                var criterions = obj?.CriterionList;
+                if (criterions != null)
+                {
+                    foreach (var item in criterions)
+                    {
+                        item.Criteria = criteria;
+                        await criterionService.CreateTran(item, connection, transaction);
+                    }
+                }
+
+                DataManipulator<Criteria, CriteriaDTO>.CommitTransaction();
+                DataManipulator<Criteria, CriteriaDTO>.CloseConnections();
+            }
+            catch (Exception ex)
+            {
+                DataManipulator<Criteria, CriteriaDTO>.CloseConnections();
+                throw;
+            }
+        }
+
+        public Task Delete(Criteria? criteria, IDbTransaction? transaction = null)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Criteria?>> GetAll(string? condition = null)
@@ -71,11 +104,9 @@ namespace RepositoryServices.Event
             }
         }
 
-        public async Task<Criteria?> Update(Criteria? criteria, IDbTransaction? transaction = null)
+        public Task<Criteria?> Update(Criteria? criteria, IDbTransaction? transaction = null)
         {
-            var obj = Helpers.ObjectHelper<Criteria>.CloneObject(criteria);
-            obj.ModifiedOn = DateTime.UtcNow;
-            return await criteriaRepository.ExecuteTransactionalAsync(obj, transaction);
+            throw new NotImplementedException();
         }
     }
 }

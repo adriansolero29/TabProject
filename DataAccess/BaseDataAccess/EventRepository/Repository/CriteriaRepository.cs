@@ -9,41 +9,50 @@ using System.Data;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace BaseDataAccess.EventRepository.Repository
 {
     public class CriteriaRepository : DataManipulator<Criteria, CriteriaDTO>, ICriteriaRepository
     {
-        public Task<Criteria?> CustomExecuteAsync(Criteria? entity = null)
+        public async Task<Criteria?> ExecuteAsync(Criteria? entity)
         {
-            throw new NotImplementedException();
-        }
+            var connection = OpenConnection();
+            var transaction = BeginTransaction();
 
-        public async Task<Criteria?> CustomExecuteTransactionalAsync(Criteria? entity = null, IDbTransaction? transaction = null)
-        {
-            var resId = await base.ExecuteAsync(entity, transaction);
+            var resId = await base.ExecuteQueryAsync(entity, connection, transaction);
             var result = ObjectHelper<Criteria>.CloneObject(entity);
             result.Id = resId;
+
+            CommitTransaction();
+            CloseConnections();
+
             return result;
         }
 
-        public async Task<Criteria?> ExecuteTransactionalAsync(Criteria? entity, IDbTransaction? transaction)
+        public async Task<Criteria?> ExecuteAsyncTran(Criteria? entity, IDbConnection connection, IDbTransaction transaction)
         {
-            var resId = await base.ExecuteAsync(entity, transaction);
-            var result = ObjectHelper<Criteria>.CloneObject(entity);
+            var resId = await base.ExecuteQueryAsync(entity, connection, transaction);
+            var result = ObjectHelper<Criteria>.CloneObjectJson(entity);
             result.Id = resId;
+
             return result;
         }
 
         public async Task<IEnumerable<Criteria>?> GetAllAsync(string? condition = null)
         {
+            OpenConnection();
+
             return await base.RetrieveAsync(condition);
         }
 
         public async Task<Criteria?> GetByIdAsync(Guid? id, string? condition = null)
         {
+            OpenConnection();
+
             var result = await base.RetrieveAsync(@"WHERE res.""MainObject""->>'Id' = '" + id + "'");
             return result.FirstOrDefault();
         }
+
     }
 }

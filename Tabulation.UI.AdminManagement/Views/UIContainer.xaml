@@ -103,11 +103,11 @@
             <Border Grid.Column="1" CornerRadius="10">
                 <materialDesign:Snackbar
                     x:Name="exceptionSnackbar"
-                    Height="45"
+                    Height="60"
                     Margin="0"
                     Padding="0"
                     HorizontalAlignment="Stretch"
-                    Background="Red"
+                    Background="OrangeRed"
                     FontSize="12"
                     FontWeight="DemiBold"
                     Foreground="LightGray"

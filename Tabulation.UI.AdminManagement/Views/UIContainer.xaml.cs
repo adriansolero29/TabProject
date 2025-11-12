@@ -1,4 +1,6 @@
-﻿using System.Windows.Controls;
+﻿using System.Diagnostics;
+using System.Windows.Controls;
+using System.Windows.Media.Animation;
 using static Base.EventAggregators;
 
 namespace Tabulation.UI.AdminManagement.Views
@@ -15,10 +17,10 @@ namespace Tabulation.UI.AdminManagement.Views
             eventAggregator?.GetEvent<SendExceptionNotification>().Subscribe(activateNotification);
         }
 
-        private void activateNotification(string obj)
+        private void activateNotification(Exception obj)
         {
             var messageQueue = exceptionSnackbar.MessageQueue;
-            Task.Factory.StartNew(() => messageQueue?.Enqueue(obj));
+            Task.Factory.StartNew(() => messageQueue?.Enqueue($"ERROR MESSAGE: {obj.Message} - {new StackTrace(obj, true)?.GetFrame(1)?.GetMethod()}"));
         }
     }
 }

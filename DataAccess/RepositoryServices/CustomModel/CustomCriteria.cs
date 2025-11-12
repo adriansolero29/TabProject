@@ -13,7 +13,7 @@ namespace RepositoryServices.CustomModel
     public class CustomCriteria : PropChanged
     {
         private Criteria? _criteriaInfo;
-        public Criteria? CriteriaInfo
+        public Criteria CriteriaInfo
         {
             get
             {
@@ -29,7 +29,7 @@ namespace RepositoryServices.CustomModel
         }
 
         private ObservableCollection<Criterion>? _criterionList;
-        public ObservableCollection<Criterion>? CriterionList
+        public ObservableCollection<Criterion> CriterionList
         {
             get
             {

@@ -15,17 +15,33 @@ namespace BaseDataAccess.EventRepository.Repository
 {
     public class ContestRepository : DataManipulator<Contest, ContestDTO>, IContestRepository
     {
-        public Task<Contest?> CustomExecuteAsync(Contest? entity = null)
-        {
-            throw new NotImplementedException();
-        }
-
-        public async Task<Contest?> CustomExecuteTransactionalAsync(Contest? entity = null, IDbTransaction? transaction = null)
+        public async Task<Contest?> ExecuteAsync(Contest? entity)
         {
             try
             {
-                BeginTransaction();
-                var resId = await base.ExecuteAsync(entity, transaction);
+                var connection = OpenConnection();
+                var transaction = BeginTransaction();
+
+                var resId = await base.ExecuteQueryAsync(entity, connection, transaction);
+                var clone = ObjectHelper<Contest>.CloneObjectJson(entity);
+                clone.Id = resId;
+                CommitTransaction();
+                CloseConnections();
+
+                return clone;
+            }
+            catch (Exception ex)
+            {
+                RollbackTransaction();
+                throw;
+            }
+        }
+  
+        public async Task<Contest?> ExecuteAsyncTran(Contest? entity, IDbConnection connection, IDbTransaction transaction)
+        {
+            try
+            {
+                var resId = await base.ExecuteQueryAsync(entity, connection, transaction);
                 var clone = ObjectHelper<Contest>.CloneObjectJson(entity);
                 clone.Id = resId;
                 CommitTransaction();
@@ -40,14 +56,9 @@ namespace BaseDataAccess.EventRepository.Repository
             }
         }
 
-        public async Task<Contest?> ExecuteTransactionalAsync(Contest? entity, IDbTransaction? transaction)
-        {
-            var resId = await base.ExecuteAsync(entity, transaction);
-            return null;
-        }
-
         public async Task<IEnumerable<Contest>?> GetAllAsync(string? condition = null)
         {
+            OpenConnection();
             return await base.RetrieveAsync(condition);
         }
 

@@ -16,9 +16,18 @@ namespace Templates.CustomMessageBox.ViewModels
         public DelegateCommand? Yes =>
             _yes ?? (_yes = new DelegateCommand(yes));
 
+        private DelegateCommand? _cancel;
+        public DelegateCommand? Cancel =>
+            _cancel ?? (_cancel = new DelegateCommand(cancel));
+
         #endregion
 
         #region Methods
+
+        void cancel()
+        {
+            DialogHost.CloseDialogCommand.Execute(null, null);
+        }
 
         private void yes()
         {

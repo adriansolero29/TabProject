@@ -1,4 +1,5 @@
-﻿using Newtonsoft.Json;
+﻿using AutoMapper;
+using Newtonsoft.Json;
 using System;
 using System.Collections.Generic;
 using System.IO;
@@ -9,7 +10,7 @@ using System.Threading;
 
 namespace Helpers
 {
-    public static class ObjectHelper<T> where T : class 
+    public static class ObjectHelper<T> where T : class
     {
         public static T CloneObject(T? obj)
         {
@@ -33,7 +34,7 @@ namespace Helpers
 
         public static T CloneObjectJson(T? obj)
         {
-            string? serialized= JsonConvert.SerializeObject(obj);
+            string? serialized = JsonConvert.SerializeObject(obj);
             return JsonConvert.DeserializeObject<T>(serialized);
         }
     }

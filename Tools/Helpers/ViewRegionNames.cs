@@ -21,6 +21,7 @@ namespace Helpers
         public const string UIContainerRegion = "UICONTAINERREGION";
         public const string AddContestWindow = "ADDCONTESTWINDOW";
         public const string AddCriteriaWindow = "ADDCRITERIAWINDOW";
+        public const string AddCandidateWindow = "ADDCANDIDATEWINDOW";
         public const string MainViewerForm = "MAINVIEWERFORM";
 
         // MessageBoxes
@@ -41,7 +42,7 @@ namespace Helpers
 
     public class ErrorNotification
     {
-        public static void SendErrorNotification(string message, IEventAggregator eventAggregator)
+        public static void SendErrorNotification(Exception message, IEventAggregator eventAggregator)
         {
             eventAggregator.GetEvent<SendExceptionNotification>().Publish(message);
         }

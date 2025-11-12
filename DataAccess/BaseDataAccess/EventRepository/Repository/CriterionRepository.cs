@@ -6,48 +6,60 @@ using ObjectLoader.Event;
 using System;
 using System.Collections.Generic;
 using System.Data;
+using System.Data.Common;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Transactions;
 
 namespace BaseDataAccess.EventRepository.Repository
 {
     public class CriterionRepository : DataManipulator<Criterion, CriterionDTO>, ICriterionRepository
     {
-        public Task<Criterion?> CustomExecuteAsync(Criterion? entity = null)
+        public async Task<Criterion?> ExecuteAsync(Criterion? entity)
         {
-            throw new NotImplementedException();
-        }
+            var connection = OpenConnection();
+            var transaction = BeginTransaction();
 
-        public async Task<Criterion?> CustomExecuteTransactionalAsync(Criterion? entity = null, IDbTransaction? transaction = null)
-        {
-            var resId = await base.ExecuteAsync(entity, transaction);
+            var resId = await base.ExecuteQueryAsync(entity, connection, transaction);
             var result = ObjectHelper<Criterion>.CloneObject(entity);
             result.Id = resId;
+
+            CommitTransaction();
+            CloseConnections();
+
             return result;
         }
 
-        public async Task<Criterion?> ExecuteTransactionalAsync(Criterion? entity, IDbTransaction? transaction)
+
+        public async Task<Criterion?> ExecuteAsyncTran(Criterion? entity, IDbConnection connection, IDbTransaction transaction)
         {
-            var resId = await base.ExecuteAsync(entity, transaction);
-            var result = ObjectHelper<Criterion>.CloneObject(entity);
+            var resId = await base.ExecuteQueryAsync(entity, connection, transaction);
+            var result = ObjectHelper<Criterion>.CloneObjectJson(entity);
             result.Id = resId;
+
             return result;
         }
 
         public async Task<IEnumerable<Criterion>?> GetAllAsync(string? condition = null)
         {
+            OpenConnection();
+
             return await base.RetrieveAsync(condition);
         }
 
         public async Task<IEnumerable<Criterion>?> GetByCriteria(Guid? criteriaId)
         {
+            OpenConnection();
+
             var result = await base.RetrieveAsync(@"WHERE res.""MainObject""->'Criteria'->>'Id' = '" + criteriaId + "'");
             return result ?? new List<Criterion>();
         }
 
         public async Task<Criterion?> GetByIdAsync(Guid? id, string? condition = null)
         {
+            OpenConnection();
+
             var result = await base.RetrieveAsync(@"WHERE res.""MainObject""->>'Id' = '" + id + "'");
             return result.FirstOrDefault();
         }

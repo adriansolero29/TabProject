@@ -13,6 +13,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DTOs;
 using ObjectLoader.Event;
+using System.Runtime.Serialization;
 
 namespace BaseDataAccess.BaseDataController
 {
@@ -89,7 +90,7 @@ namespace BaseDataAccess.BaseDataController
             }
         }
 
-        protected async Task<Guid?> ExecuteAsync(ObjectLoader? entity, IDbTransaction? transaction = null)
+        protected async Task<Guid?> ExecuteQueryAsync(ObjectLoader? entity, IDbConnection? connection, IDbTransaction? transaction)
         {
             try
             {
@@ -115,19 +116,28 @@ namespace BaseDataAccess.BaseDataController
 
                 var json = await Connection.DbConnection.StartConnection(async () =>
                 {
-                    NpgsqlConnection? databaseConnection = Connection.DbConnection.ConnectionInstance;
                     string json = "";
-                    if (databaseConnection != null)
+
+                    if (connection != null && transaction != null)
                     {
-                        var result = transaction != null ? await databaseConnection.ExecuteScalarAsync(sql, param, Connection.DbConnection.Transaction) : await databaseConnection.ExecuteScalarAsync(sql, param);
+                        var result = await connection.ExecuteScalarAsync(sql, param, transaction);
                         json = JsonConvert.SerializeObject(result, Formatting.Indented);
                     }
+                    else
+                        throw new ArgumentNullException("CONNECTION OR TRANSACTION IS NULL");
 
                     return json;
                 }, sql);
 
-                var newToGuid = json.Replace(@"""", string.Empty);
-                var jsonGuid = new Guid(newToGuid);
+
+                var newToGuid = idCheck != null ? idCheck : json.Replace(@"""", string.Empty);
+
+                if (newToGuid.ToString().ToUpper() == "NULL")
+                {
+                    throw new ArgumentNullException("Returned ID is null");
+                }
+
+                var jsonGuid = new Guid(newToGuid.ToString());
                 return jsonGuid;
             }
             catch (Exception ex)
@@ -137,15 +147,22 @@ namespace BaseDataAccess.BaseDataController
             }
         }
 
-        protected void BeginTransaction()
+        public static IDbTransaction BeginTransaction()
+        {
+            Connection.DbConnection.Transaction = Connection.DbConnection.ConnectionInstance?.BeginTransaction();
+            return Connection.DbConnection.Transaction ?? throw new ArgumentNullException("Transaction is null");
+        }
+
+        public static IDbConnection OpenConnection()
         {
             NpgsqlConnection connection = new NpgsqlConnection("User ID=postgres;Password=AMCSentinel333!;Host=localhost;Port=5432;Database=TabulationDB;");
             Connection.DbConnection.ConnectionInstance = connection;
             Connection.DbConnection.ConnectionInstance.Open();
-            Connection.DbConnection.Transaction = Connection.DbConnection.ConnectionInstance.BeginTransaction();
+
+            return Connection.DbConnection.ConnectionInstance;
         }
 
-        protected void CommitTransaction()
+        public static void CommitTransaction()
         {
             if (Connection.DbConnection.Transaction != null)
             {
@@ -153,7 +170,7 @@ namespace BaseDataAccess.BaseDataController
             }
         }
 
-        protected void RollbackTransaction()
+        public static void RollbackTransaction()
         {
             if (Connection.DbConnection.Transaction != null)
             {
@@ -161,7 +178,7 @@ namespace BaseDataAccess.BaseDataController
             }
         }
 
-        protected void CloseConnections()
+        public static void CloseConnections()
         {
             if (Connection.DbConnection.ConnectionInstance != null && Connection.DbConnection.Transaction != null)
             {
@@ -169,7 +186,6 @@ namespace BaseDataAccess.BaseDataController
                 Connection.DbConnection.Transaction.Dispose();
             }
         }
-
     }
 }
 

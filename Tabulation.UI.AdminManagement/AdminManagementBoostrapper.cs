@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows;
+using Tabulation.UI.AdminManagement.BaseViewModels;
 using Tabulation.UI.AdminManagement.Views;
 
 namespace Tabulation.UI.AdminManagement
@@ -20,6 +21,8 @@ namespace Tabulation.UI.AdminManagement
 
         protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
+            containerRegistry.RegisterSingleton<MainProviderComposition>();
+
             containerRegistry.RegisterSingleton<IContestRepository, ContestRepository>();
             containerRegistry.RegisterSingleton<IContestService, ContestService>();
 

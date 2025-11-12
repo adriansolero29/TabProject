@@ -24,11 +24,12 @@ namespace Tabulation.UI.AdminManagement
         public void RegisterTypes(IContainerRegistry containerRegistry)
         {
             containerRegistry.RegisterForNavigation<UIContainer>(Helpers.ViewRegionNames.UIContainer);
-            containerRegistry.RegisterForNavigation<MainViewer>(Helpers.ViewRegionNames.MainViewerForm);
+            containerRegistry.RegisterForNavigation<CriteriaViewer>(Helpers.ViewRegionNames.MainViewerForm);
             regionManager.RegisterViewWithRegion(Helpers.ViewRegionNames.ShellWindowRegion, Helpers.ViewRegionNames.UIContainer);
 
             containerRegistry.RegisterForNavigation<AddContestWindow>(Helpers.ViewRegionNames.AddContestWindow);
             containerRegistry.RegisterForNavigation<AddCriteriaWindow>(Helpers.ViewRegionNames.AddCriteriaWindow);
+            containerRegistry.RegisterForNavigation<AddCandidateWindow>(Helpers.ViewRegionNames.AddCandidateWindow);
 
             containerRegistry.RegisterForNavigation<Templates.CustomMessageBox.Views.Success>(Helpers.DialogNames.SuccessDialog);
             containerRegistry.RegisterForNavigation<Templates.CustomMessageBox.Views.YesNo>(Helpers.DialogNames.YesNoDialog);

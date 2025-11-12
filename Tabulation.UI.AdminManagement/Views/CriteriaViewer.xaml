@@ -1,5 +1,5 @@
 ﻿<UserControl
-    x:Class="Tabulation.UI.AdminManagement.Views.MainViewer"
+    x:Class="Tabulation.UI.AdminManagement.Views.CriteriaViewer"
     xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
     xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
     xmlns:Templates="clr-namespace:Templates.CustomMessageBox.Views;assembly=Templates"
@@ -157,7 +157,7 @@
                                                 <Button
                                                     Padding="5,0"
                                                     BorderThickness="0"
-                                                    Command="{Binding DataContext.EditCriterion, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    Command="{Binding DataContext.EditCriteria, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}"
                                                     Foreground="SkyBlue"
                                                     Style="{StaticResource MaterialDesignFlatButton}">
@@ -170,7 +170,7 @@
                                                 </Button>
                                                 <Button
                                                     Padding="5,0"
-                                                    Command="{Binding DataContext.DeleteCriterion, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    Command="{Binding DataContext.DeleteCriteria, RelativeSource={RelativeSource AncestorType=ItemsControl}}"
                                                     CommandParameter="{Binding}"
                                                     Foreground="OrangeRed"
                                                     Style="{StaticResource MaterialDesignFlatButton}">
@@ -188,6 +188,36 @@
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
                     </ScrollViewer>
+                </GroupBox>
+
+                <GroupBox
+                    Grid.Row="1"
+                    Margin="10"
+                    Padding="0"
+                    BorderThickness="0"
+                    Style="{DynamicResource MaterialDesignGroupBox}">
+                    <GroupBox.HeaderTemplate>
+                        <DataTemplate>
+                            <DockPanel>
+                                <materialDesign:PackIcon
+                                    Width="25"
+                                    Height="25"
+                                    Margin="0,0,10,0"
+                                    VerticalAlignment="Center"
+                                    Foreground="White"
+                                    Kind="Label" />
+                                <TextBlock
+                                    VerticalAlignment="Center"
+                                    Style="{StaticResource MaterialDesignHeadline6TextBlock}"
+                                    Text="Candidates" />
+                                <Templates:AddRefreshButtons
+                                    HorizontalAlignment="Right"
+                                    AddCommand="{Binding AddCandidate}"
+                                    DataContext="{Binding RelativeSource={RelativeSource AncestorType=GroupBox}, Path=DataContext}"
+                                    RefreshCommand="{Binding RefreshCandidate}" />
+                            </DockPanel>
+                        </DataTemplate>
+                    </GroupBox.HeaderTemplate>
                 </GroupBox>
 
                 <Grid Grid.Row="1" />

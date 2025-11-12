@@ -17,7 +17,7 @@ namespace DTOs.Event
                 Id = objL?.Id,
                 ModifiedByUserId = objL?.ModifiedByUserId,
                 Version = objL?.Version,
-                //CriteriaId = objL?.Criteria?.Id,
+                CriteriaId = objL?.Criteria?.Id,
                 Name = objL?.Name,
                 Sequence = objL?.Sequence,
                 Percentage = objL?.Percentage,

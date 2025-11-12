@@ -18,16 +18,19 @@ namespace RepositoryServices.Event
             this.criterionRepository = criterionRepository;
         }
 
-        public async Task<Criterion?> Create(Criterion? criterion, IDbTransaction? transaction = null)
+        public async Task<Criterion?> Create(Criterion? criterion)
         {
-            return await criterionRepository.ExecuteTransactionalAsync(criterion, transaction);
+            return await criterionRepository.ExecuteAsync(criterion);
         }
 
-        public async Task Delete(Criterion? criterion, IDbTransaction? transaction = null)
+        public async Task<Criterion?> CreateTran(Criterion? criterion, IDbConnection connection, IDbTransaction transaction)
         {
-            var obj = Helpers.ObjectHelper<Criterion>.CloneObject(criterion);
-            obj.IsDeleted = true;
-            await criterionRepository.ExecuteTransactionalAsync(obj, transaction);
+            return await criterionRepository.ExecuteAsyncTran(criterion, connection, transaction);
+        }
+
+        public Task Delete(Criterion? criterion, IDbTransaction? transaction = null)
+        {
+            throw new NotImplementedException();
         }
 
         public async Task<IEnumerable<Criterion?>> GetAll(string? condition = null)
@@ -40,11 +43,14 @@ namespace RepositoryServices.Event
             return await criterionRepository.GetByCriteria(criteriaId);
         }
 
-        public async Task<Criterion?> Update(Criterion? criterion, IDbTransaction? transaction = null)
+        public Task<Criterion?> Update(Criterion? criterion)
         {
-            var obj = Helpers.ObjectHelper<Criterion>.CloneObject(criterion);
-            obj.ModifiedOn = DateTime.UtcNow;
-            return await criterionRepository.ExecuteTransactionalAsync(obj, transaction);
+            throw new NotImplementedException();
+        }
+
+        public Task<Criterion?> UpdateTran(Criterion? criterion, IDbConnection connection, IDbTransaction transaction)
+        {
+            throw new NotImplementedException();
         }
     }
 }

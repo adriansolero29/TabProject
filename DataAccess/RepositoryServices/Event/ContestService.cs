@@ -1,6 +1,9 @@
-﻿using BaseDataAccess.BaseDataController.Connection;
+﻿using BaseDataAccess.BaseDataController;
+using BaseDataAccess.BaseDataController.Connection;
 using BaseDataAccess.EventRepository.Interface;
+using DTOs.Event;
 using ObjectLoader.Event;
+using RepositoryServices.CustomModel;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,17 +22,22 @@ namespace RepositoryServices.Event
             this.contestRepository = contestRepository;
         }
 
-        public async Task<Contest?> Create(Contest? contest, IDbTransaction? transaction = null)
+        public async Task<Contest?> Create(Contest? contest)
         {
-            var result = await contestRepository.CustomExecuteTransactionalAsync(contest, transaction);
-            return result;
-        }
+            if (contest?.Id != null)
+            {
+                contest.Version = contest.Version + 1;
+                contest.ModifiedOn = DateTime.UtcNow;
+            }
 
-        public async Task Delete(Contest? contest, IDbTransaction? transaction = null)
+            return await contestRepository.ExecuteAsync(contest);
+        }
+        public async Task Delete(Contest? contest)
         {
-            var obj = Helpers.ObjectHelper<Contest>.CloneObjectJson(contest);
-            obj.IsDeleted = true;
-            await contestRepository.CustomExecuteTransactionalAsync(obj);
+            if (contest != null)
+                contest.IsDeleted = true;
+
+            await contestRepository.ExecuteAsync(contest);
         }
 
         public async Task<IEnumerable<Contest>?> GetAll(string? condition = null)
@@ -43,14 +51,11 @@ namespace RepositoryServices.Event
             {
                 throw;
             }
-            
         }
 
-        public async Task<Contest?> Update(Contest? contest, IDbTransaction? transaction = null)
+        public async Task<Contest?> Update(Contest? contest)
         {
-            var obj = Helpers.ObjectHelper<Contest>.CloneObject(contest);
-            obj.ModifiedOn = DateTime.UtcNow;
-            return await contestRepository.CustomExecuteTransactionalAsync(obj, transaction);
+            return await contestRepository.ExecuteAsync(contest);
         }
     }
 }

@@ -108,8 +108,9 @@
                 Width="100"
                 Margin="6,0,0,0"
                 HorizontalAlignment="Right"
-                Command="{x:Static materialDesign:DialogHost.CloseDialogCommand}"
+                Command="{Binding Cancel}"
                 Foreground="OrangeRed"
+                IsEnabled="True"
                 Style="{DynamicResource MaterialDesignFlatDarkButton}">
                 <Button.Content>
                     <DockPanel>

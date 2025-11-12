@@ -21,25 +21,29 @@ using static Base.EventAggregators;
 
 namespace Tabulation.UI.AdminManagement.ViewModels
 {
-    public class UIContainerViewModel : BaseVMWithCRUDCommands
+    public class UIContainerViewModel : CRUDViewModelBase
     {
+        public MainProviderComposition MainProviderComposition { get; }
+
         private readonly DialogCoordinator? _dialogCoordinator;
         private readonly IContestService contestService;
-        private readonly IContainerProvider container;
-        private readonly IEventAggregator eventAggregator;
-        private readonly IRegionManager regionManager;
-        private readonly IDialogService dialogService;
 
-        public UIContainerViewModel(IContainerProvider container, IEventAggregator eventAggregator, IRegionManager regionManager, IDialogService dialogService, IContestService? contestService)
+        public UIContainerViewModel(MainProviderComposition mainProviderComposition, IContestService? contestService)
         {
-            this.container = container ?? throw new ArgumentNullException(nameof(container));
-            this.eventAggregator = eventAggregator ?? throw new ArgumentNullException(nameof(eventAggregator));
-            this.regionManager = regionManager ?? throw new ArgumentNullException(nameof(regionManager));
-            this.dialogService = dialogService ?? throw new ArgumentNullException(nameof(dialogService)); ;
-            this.contestService = contestService ?? throw new ArgumentNullException(nameof(contestService));
+            MainProviderComposition = mainProviderComposition;
             _dialogCoordinator = (DialogCoordinator?)DialogCoordinator.Instance;
+            this.contestService = contestService ?? throw new ArgumentNullException(nameof(contestService));
+            MainProviderComposition.EventAggregator.GetEvent<NotifyData>().Subscribe(reload);
 
-            Init();
+            LoadData();
+        }
+
+        private void reload(string obj)
+        {
+            if (obj == nameof(UIContainerViewModel))
+            {
+                LoadData();
+            }
         }
 
         #region Startup
@@ -66,7 +70,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
 
         #region Methods
 
-        private async void Init()
+        private async void LoadData()
         {
             try
             {
@@ -76,39 +80,35 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             }
             catch (Exception ex)
             {
-                Helpers.ErrorNotification.SendErrorNotification(ex.Message, eventAggregator);
+                Helpers.ErrorNotification.SendErrorNotification(ex, MainProviderComposition.EventAggregator);
             }
         }
 
         private void openDetails()
         {
-            regionManager.Regions[Helpers.ViewRegionNames.MainViewerRegion].RemoveAll();
-            regionManager.RequestNavigate(Helpers.ViewRegionNames.MainViewerRegion, Helpers.ViewRegionNames.MainViewerForm);
-            eventAggregator.GetEvent<PassData<Contest>>().Publish(new Payload<Contest> { Data = SelectedContest });
+            MainProviderComposition.RegionManager.Regions[Helpers.ViewRegionNames.MainViewerRegion].RemoveAll();
+            MainProviderComposition.RegionManager.RequestNavigate(Helpers.ViewRegionNames.MainViewerRegion, Helpers.ViewRegionNames.MainViewerForm);
+            MainProviderComposition.EventAggregator.GetEvent<PassData<Contest>>().Publish(new Payload<Contest> { Data = SelectedContest });
         }
 
         public async override void add(string? p = null)
         {
             try
             {
-                await UINavigator.OpenDialog(container, dialogService, Helpers.ViewRegionNames.AddContestWindow);
-                //await UINavigator.ShowDialogHost(container, Helpers.ViewRegionNames.AddContestWindow, Helpers.DialogNames.UIContainerDialog);
-                refresh();
+                await UINavigator.OpenDialog(MainProviderComposition.ContainerProvider, MainProviderComposition.DialogService, Helpers.ViewRegionNames.AddContestWindow);
             }
             catch (Exception ex)
             {
-                Helpers.ErrorNotification.SendErrorNotification(ex.Message, eventAggregator);
+                Helpers.ErrorNotification.SendErrorNotification(ex, MainProviderComposition.EventAggregator);
             }
         }
 
         public async override void edit(string? p = null)
         {
             if (Helpers.SelectedItem.IsItemValid(SelectedContest?.Id))
-                await UINavigator.ShowDialogPassData<Contest>(container, Helpers.ViewRegionNames.AddContestWindow, Helpers.DialogNames.UIContainerDialog, eventAggregator, Helpers.ObjectHelper<Contest>.CloneObjectJson(SelectedContest), "update");
+                await UINavigator.ShowDialogPassData<Contest>(MainProviderComposition.ContainerProvider, Helpers.ViewRegionNames.AddContestWindow, Helpers.DialogNames.UIContainerDialog, MainProviderComposition.EventAggregator, Helpers.ObjectHelper<Contest>.CloneObjectJson(SelectedContest), "update", MainProviderComposition.DialogService);
             else
-                await UINavigator.ShowDialogHost(container, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
-
-            refresh();
+                await UINavigator.ShowDialogHost(MainProviderComposition.ContainerProvider, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
         }
 
         public async override void delete(string? p = null)
@@ -117,24 +117,24 @@ namespace Tabulation.UI.AdminManagement.ViewModels
             {
                 if (Helpers.SelectedItem.IsItemValid(SelectedContest?.Id))
                 {
-                    var delete = await UINavigator.ShowDialogHost(container, Helpers.DialogNames.YesNoDialog, DialogNames.UIContainerDialog) ?? false;
+                    var delete = await UINavigator.ShowDialogHost(MainProviderComposition.ContainerProvider, Helpers.DialogNames.YesNoDialog, DialogNames.UIContainerDialog) ?? false;
                     if ((bool)delete)
                         await contestService.Delete(SelectedContest);
                 }
                 else
-                    await UINavigator.ShowDialogHost(container, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
+                    await UINavigator.ShowDialogHost(MainProviderComposition.ContainerProvider, Helpers.DialogNames.WarningDialog, Helpers.DialogNames.UIContainerDialog);
 
                 refresh();
             }
             catch (Exception ex)
             {
-                Helpers.ErrorNotification.SendErrorNotification(ex.Message, eventAggregator);
+                Helpers.ErrorNotification.SendErrorNotification(ex, MainProviderComposition.EventAggregator);
             }
         }
 
         public override void refresh(string? p = null)
         {
-            Init();
+            LoadData();
         }
 
         #endregion
@@ -158,7 +158,7 @@ namespace Tabulation.UI.AdminManagement.ViewModels
                     openDetails();
                 }
                 else
-                    regionManager.Regions[Helpers.ViewRegionNames.MainViewerRegion].RemoveAll();
+                    MainProviderComposition.RegionManager.Regions[Helpers.ViewRegionNames.MainViewerRegion].RemoveAll();
             }
         }
 
